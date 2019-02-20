@@ -111,7 +111,6 @@ class Velogistics_Admin {
 
 	function sanitize_settings( $input ) {
 		$valid_input = get_option( 'velogistics_settings_name' );
-		print('Test Test Test');
 		foreach( $this->settings as $key => $value ) {
 			print('Key: '.$key);
 			if( 'checkbox' == $value['type'] ) { 
@@ -155,6 +154,10 @@ class Velogistics_Admin {
 		</div>
 		<?php		
 	}
+	public function sanitize_boolean($input){
+	
+	return ( ( isset( $input ) && true == $input ) ? 1 : 0 );
+	}
 
 	public function add_cargobike_metaboxes(){
 		// Start with an underscore to hide fields from custom fields list
@@ -178,6 +181,7 @@ class Velogistics_Admin {
 			'name' => esc_html__( 'Suited for children transport'),
 			'id'   => $prefix . 'can_transport_children',
 			'type' => 'checkbox',
+			'sanitization_cb' => array($this, 'sanitize_boolean')
 		) );
 		$cmb->add_field( array(
 			'name' => __( 'Maximum transport weight (kg)' ),

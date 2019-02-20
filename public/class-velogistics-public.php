@@ -107,6 +107,15 @@ class Velogistics_Public {
 		}
 		return $content;
 	}
+	public function add_api_item_metadata($itemApiData, $item){
+		$prefix = '_velogistics_';
+		$id = $item->ID;
+		$itemApiData['can_transport_children'] = get_post_meta( $id, $prefix.'can_transport_children', true )? true:false;
+		$itemApiData['max_transport_weight'] = (float)get_post_meta( $id, $prefix.'max_transport_weight', true );
+		$itemApiData['nr_of_wheels'] = (int)get_post_meta( $id, $prefix.'nr_of_wheels', true );
+
+		return $itemApiData;
+	}
 	public function notify_velogistics(){
 		echo "notify_velogistics";
 		$settings = get_option( 'velogistics_settings_name' );
