@@ -117,7 +117,6 @@ class Velogistics_Public {
 		return $itemApiData;
 	}
 	public function notify_velogistics(){
-		echo "notify_velogistics";
 		$settings = get_option( 'velogistics_settings_name' );
 		if (!isset($settings['publish']) || $settings['publish'] == '0') {
 			return;
@@ -128,8 +127,7 @@ class Velogistics_Public {
 		// 	'method'      => 'POST',
 		// 	'data_format' => 'body',
 		// ));
-		$url = VELOGISTICS_NOTIFICATION_URL.'?url='.urlencode(get_rest_url(null, 'cb2/v1/items'));
-		echo "Notifying velogistics: ".$url;
+		$url = $settings['notification_url'].'?url='.urlencode(get_rest_url(null, VELOGISTICS_COMMONS_API_ENDPOINT));
 		wp_remote_get($url);
 	}
 

@@ -27,7 +27,11 @@ if ( ! defined( 'WPINC' ) ) {
 define( 'VELOGISTICS_VERSION', '1.0.0' );
 define ( 'VELOGISTICS_CB2_DIR', 'commons-booking-2/commons-booking.php' );      
 define ( 'VELOGISTICS_REQUIRED_CB2_VERSION', '2.0.0' ) ;   
-define ( 'VELOGISTICS_NOTIFICATION_URL', 'http://ptsv2.com/t/velogistics/post' ) ;          
+// define ( 'VELOGISTICS_NOTIFICATION_URL', 'http://ptsv2.com/t/velogistics/post' ) ;      
+// define ( 'VELOGISTICS_NOTIFICATION_URL', 'http://localhost:8028/notify' ) ;          
+define ( 'VELOGISTICS_NOTIFICATION_URL', 'http://host.docker.internal:8082/notify' ) ;          
+// define ( 'VELOGISTICS_NOTIFICATION_URL', 'https://velogistics.net/notify' ) ;         
+define ('VELOGISTICS_COMMONS_API_ENDPOINT', 'commons-booking-2/v1/items'); 
 function check_velogistics_requirements(){
     require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;  // to get is_plugin_active() early
     

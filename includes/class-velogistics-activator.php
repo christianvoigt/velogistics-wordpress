@@ -30,5 +30,10 @@ class Velogistics_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+		add_option('velogistics_settings_name',  array(
+			'publish' => '1',
+			'prepend_metadata' => '1',
+			'notification_url' => 'https://velogistics.net/notify'
+		));
 	}
 }

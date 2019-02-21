@@ -67,6 +67,13 @@ class Velogistics_Admin {
 			'group' => 'velogistics_settings_group',
 			'section' => 'velogistics_example_section',
 			'type' => 'checkbox'
+		),
+		'notification_url' => array(
+			'id' => 'notification_url',
+			'title' => 'URL under which velgogistics will be notified',
+			'group' => 'velogistics_settings_group',
+			'section' => 'velogistics_example_section',
+			'type' => 'url'
 		)
 	);
 
@@ -86,7 +93,11 @@ class Velogistics_Admin {
 					$cb[] = 'render_checkbox_input';
 					$args['option'] = $setting['id'];
 					break;
-			}
+				case 'url':
+					$cb[] = 'render_text_input';
+					$args['option'] = $setting['id'];
+				break;
+		}
 			add_settings_field(
 				$setting['id'],
 				$setting['title'],
@@ -100,13 +111,9 @@ class Velogistics_Admin {
             'velogistics_settings_group', // Option group
 			'velogistics_settings_name ', // Option name
 			array(
-				'sanitize_callback'=> array($this, 'sanitize_settings'),
-				'default' => array(
-					'publish' => '1',
-					'prepend_metadata' => '1'
-				)
+				'sanitize_callback'=> array($this, 'sanitize_settings')
 			)
-        );	
+      );	
 	}
 
 	function sanitize_settings( $input ) {
@@ -117,9 +124,11 @@ class Velogistics_Admin {
 				 if(isset( $input[$key])){
 					$valid_input[$key] = (true == $input[$key])? 1 : 0;
 				 }
-			 }
-		 }
-		 return $valid_input;
+			}else if('url' == $value['type']){
+			 $valid_input[$key] = esc_url_raw($input[key]);
+			}
+		}
+		  return $valid_input;
 	}
 	public function render_settings_section() {
 		//echo additional content between section header and content
@@ -130,6 +139,13 @@ class Velogistics_Admin {
 		$html = '<input type="checkbox" id="velogistics_settings_name['. $args['option'] .']" name="velogistics_settings_name['. $args['option'] .']" value="1" '.checked('1', $value, false).'>';
 		echo $html;
 	}
+public function render_text_input( $args ) {
+  $options = get_option( 'velogistics_settings_name' );
+  $value = ( isset( $options[ $args['option'] ] )? $options[ $args['option'] ] : '' );
+  $html = '<input type="text" id="velogistics_settings_name['. $args['option'] .']" name="velogistics_settings_name['. $args['option'] .']" value="'. $value .'"/>';
+
+  echo $html;
+}
 	public function register_options_page(){
 		add_options_page( 
 			'Velogistics Plugin Settings', 
