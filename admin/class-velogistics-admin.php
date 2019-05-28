@@ -175,31 +175,28 @@ public function render_text_input( $args ) {
 	return ( ( isset( $input ) && true == $input ) ? 1 : 0 );
 	}
 
-	public function add_cargobike_metaboxes(){
+	public function add_cargobike_metaboxes($metaboxes){
 		// Start with an underscore to hide fields from custom fields list
 		$prefix = '_velogistics_';
 
-		/**
-		 * Initiate the metabox
-		 */
-		$cmb = new_cmb2_box( array(
+		$cmb = array(
 			'id'            => 'velogistics_metabox',
 			'title'         => __( 'Velogistics' ),
-			'object_types'  => array( 'item', ), // Post type
 			'context'       => 'normal',
 			'priority'      => 'high',
 			'show_names'    => true, // Show field names on the left
 			// 'cmb_styles' => false, // false to disable the CMB stylesheet
 			// 'closed'     => true, // Keep the metabox closed by default
-		) );
+		 );
 
-		$cmb->add_field( array(
+		$cmb['fields'] = array( 
+			array(
 			'name' => esc_html__( 'Suited for children transport'),
 			'id'   => $prefix . 'can_transport_children',
 			'type' => 'checkbox',
 			'sanitization_cb' => array($this, 'sanitize_boolean')
-		) );
-		$cmb->add_field( array(
+		),
+		array(
 			'name' => __( 'Maximum transport weight (kg)' ),
 			'id'   => $prefix . 'max_transport_weight',
 			'type' => 'text',
@@ -209,8 +206,8 @@ public function render_text_input( $args ) {
 			),
 			'sanitization_cb' => 'absint',
 				'escape_cb'       => 'absint',
-		) );
-		$cmb->add_field( array(
+		),
+		array(
 			'name' => __( 'Number of wheels' ),
 			'id'   => $prefix . 'nr_of_wheels',
 			'type' => 'text',
@@ -221,6 +218,8 @@ public function render_text_input( $args ) {
 			'sanitization_cb' => 'absint',
 				'escape_cb'       => 'absint',
 		) );
+		$metaboxes[] = $cmb;
+		return $metaboxes;
 	}
 
 	/**

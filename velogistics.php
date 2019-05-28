@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 define( 'VELOGISTICS_VERSION', '1.0.0' );
-define ( 'VELOGISTICS_CB2_DIR', 'commons-booking-2/commons-booking.php' );      
+define ( 'VELOGISTICS_CB2_DIR', 'commons-booking-2/commons-booking-2.php' );      
 define ( 'VELOGISTICS_REQUIRED_CB2_VERSION', '2.0.0' ) ;   
 // define ( 'VELOGISTICS_NOTIFICATION_URL', 'http://ptsv2.com/t/velogistics/post' ) ;      
 // define ( 'VELOGISTICS_NOTIFICATION_URL', 'http://localhost:8028/notify' ) ;          
