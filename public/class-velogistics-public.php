@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The public-facing functionality of the plugin.
  *
@@ -102,24 +101,51 @@ class Velogistics_Public {
 	public function prepend_metadata($content){
 		global $post;
 		$settings = get_option( 'velogistics_settings_name' );
-		if (isset($settings['prepend_metadata']) && $settings['prepend_metadata'] == '1' && $post->post_type == 'item') {
-			$content = velogistics_get_template_part('velogistics/public/partials', 'cargobike-metadata', '', true).$content;
+		if (isset($settings['prepend_metadata']) && $settings['prepend_metadata'] == '1' && $post->post_type == 'cb2_item') {
+			$metadata_options = ( array ) json_decode( file_get_contents( plugin_dir_path( __DIR__ ). "vendor/wielebenwir/commons-api/velogistics-metadata.json" ) );
+			$content = velogistics_get_template_part('velogistics/public/partials', 'cargobike-metadata', '', true,array("metadata_options"=>$metadata_options)).$content;
 		}
 		return $content;
 	}
 	public function add_api_item_metadata($itemApiData, $item){
 		$prefix = '_velogistics_';
 		$id = $item->ID;
-		$itemApiData['can_transport_children'] = get_post_meta( $id, $prefix.'can_transport_children', true )? true:false;
-		$itemApiData['max_transport_weight'] = (float)get_post_meta( $id, $prefix.'max_transport_weight', true );
-		$itemApiData['nr_of_wheels'] = (int)get_post_meta( $id, $prefix.'nr_of_wheels', true );
+		$itemApiData['isCommercial'] = get_post_meta( $id, $prefix.'is_commercial', true )? true:false;
+		$itemApiData['loadCapacity'] = (float)get_post_meta( $id, $prefix.'load_capacity', true );
+		$itemApiData['itemType'] = sanitize_text_field(get_post_meta( $id, $prefix.'item_type', true ));
+		$itemApiData['features'] = array();
+		$features = get_post_meta( $id, $prefix.'features', true );
+		if(is_array($features)){
+			foreach($features as $item){
+				$itemApiData["features"][] = sanitize_text_field($item);
+			}	
+		}
+		$itemApiData["boxDimensions"] = array(
+			"width"=> (float)get_post_meta( $id, $prefix.'box_width', true ),
+			"height"=> (float)get_post_meta( $id, $prefix.'box_height', true ),
+			"length"=> (float)get_post_meta( $id, $prefix.'box_length', true ),
+		);
 
 		return $itemApiData;
 	}
-	public function notify_velogistics(){
+	public function add_publishOnVelogistics_flag($data){
+		$settings = get_option( 'velogistics_settings_name' );
+		$publish = isset($settings['publish']) && $settings['publish'] == '1';
+		$data['publishOnVelogistics'] = $publish;
+		return $data;
+	}
+	public function notify_velogistics($post_id, $post){
 		$settings = get_option( 'velogistics_settings_name' );
 		if (!isset($settings['publish']) || $settings['publish'] == '0') {
 			return;
+		}
+		// in the future we might have to check if the booking is used once (otherwise it might affect other things in the system)
+		// var_dump($post->period_group->used_once());
+		// Is this a new booking?
+		if(get_post_type($post) == "cb2_prdent-tf-user" && get_post_status($post) == "publish" && $post->period_status_type->ID ==2){
+			$url = $settings['notification_url'].'?url='.urlencode(get_rest_url(null, VELOGISTICS_COMMONS_API_ENDPOINT)).'&item='.$post->item_ID.'&availability_changed=true';
+		}else{
+			$url = $settings['notification_url'].'?url='.urlencode(get_rest_url(null, VELOGISTICS_COMMONS_API_ENDPOINT));
 		}
 		// $data = wp_remote_post($url, array(
 		// 	'headers'     => array('Content-Type' => 'application/json; charset=utf-8'),
@@ -127,7 +153,6 @@ class Velogistics_Public {
 		// 	'method'      => 'POST',
 		// 	'data_format' => 'body',
 		// ));
-		$url = $settings['notification_url'].'?url='.urlencode(get_rest_url(null, VELOGISTICS_COMMONS_API_ENDPOINT));
 		wp_remote_get($url);
 	}
 

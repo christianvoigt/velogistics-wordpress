@@ -160,6 +160,7 @@ class Velogistics {
 		$this->loader->add_action('cb2_item_metaboxes', $plugin_admin, 'add_cargobike_metaboxes');
 		$this->loader->add_action('admin_init', $plugin_admin, 'register_settings');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'register_options_page');
+		$this->loader->add_action('update_option_velogistics_settings_name', $plugin_admin, 'update_option', 10, 2);
 	}
 
 	/**
@@ -176,8 +177,9 @@ class Velogistics {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action( 'the_content', $plugin_public, 'prepend_metadata' );
-		$this->loader->add_action('save_post', $plugin_public, 'notify_velogistics' );
+		$this->loader->add_action('cb2_save_post', $plugin_public, 'notify_velogistics', 10, 3 );
 		$this->loader->add_filter('cb2_api_add_item_metadata', $plugin_public, 'add_api_item_metadata', 10, 2 );
+		$this->loader->add_filter('cb2_api_items_endpoint', $plugin_public, 'add_publishOnVelogistics_flag', 10, 1 );
 	}
 
 	/**

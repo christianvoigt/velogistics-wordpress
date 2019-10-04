@@ -31,7 +31,7 @@ define ( 'VELOGISTICS_REQUIRED_CB2_VERSION', '2.0.0' ) ;
 // define ( 'VELOGISTICS_NOTIFICATION_URL', 'http://localhost:8028/notify' ) ;          
 define ( 'VELOGISTICS_NOTIFICATION_URL', 'http://host.docker.internal:8082/notify' ) ;          
 // define ( 'VELOGISTICS_NOTIFICATION_URL', 'https://velogistics.net/notify' ) ;         
-define ('VELOGISTICS_COMMONS_API_ENDPOINT', 'commons-booking-2/v1/items'); 
+define ('VELOGISTICS_COMMONS_API_ENDPOINT', 'commons-booking-2/v1'); 
 function check_velogistics_requirements(){
     require_once( ABSPATH . '/wp-admin/includes/plugin.php' ) ;  // to get is_plugin_active() early
     
@@ -48,9 +48,16 @@ function check_velogistics_requirements(){
     return true ;            
 }
 
+function velogistics_requirements_error(){
+    $class = 'notice notice-error';
+	$message = __( 'The Velogistics plugin requires the Commons Booking 2 plugin to be installed. Please install and activate it first.', 'sample-text-domain' );
+
+	printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+}
 if(!check_velogistics_requirements()){
-    // add_action( 'admin_notices', 'velogistics_requirements_error' );
-    exit( 'The Velogistics plugin requires the Commons Booking 2 plugin to be installed. Please install and activate it first.');
+    add_action( 'admin_notices', 'velogistics_requirements_error' );
+    return;
+    // exit( 'The Velogistics plugin requires the Commons Booking 2 plugin to be installed. Please install and activate it first.');
 }
 /**
  * The code that runs during plugin activation.

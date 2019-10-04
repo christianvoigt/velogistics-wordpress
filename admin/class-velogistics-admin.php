@@ -58,21 +58,21 @@ class Velogistics_Admin {
 			'id' => 'publish',
 			'title' => 'Publish cargobike availability on Velogistics',
 			'group' => 'velogistics_settings_group',
-			'section' => 'velogistics_example_section',
+			'section' => 'velogistics_general_section',
 			'type' => 'checkbox'
 		),
 		'prepend_metadata' => array(
 			'id' => 'prepend_metadata',
 			'title' => 'Prepend cargo bike metadata to post content',
 			'group' => 'velogistics_settings_group',
-			'section' => 'velogistics_example_section',
+			'section' => 'velogistics_general_section',
 			'type' => 'checkbox'
 		),
 		'notification_url' => array(
 			'id' => 'notification_url',
 			'title' => 'URL under which velgogistics will be notified',
 			'group' => 'velogistics_settings_group',
-			'section' => 'velogistics_example_section',
+			'section' => 'velogistics_general_section',
 			'type' => 'url'
 		)
 	);
@@ -80,8 +80,8 @@ class Velogistics_Admin {
 	public function register_settings(){
 		add_option( 'velogistics_settings_group');
 		add_settings_section(
-			'velogistics_example_section',
-			'Example Section',
+			'velogistics_general_section',
+			'General Settings',
 			array( $this, 'render_settings_section' ),
 			'velogistics_settings_group'
 		);
@@ -130,6 +130,9 @@ class Velogistics_Admin {
 		}
 		  return $valid_input;
 	}
+	function sanitize_float($input){
+		return filter_var($input,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+	}
 	public function render_settings_section() {
 		//echo additional content between section header and content
 	}
@@ -176,6 +179,15 @@ public function render_text_input( $args ) {
 	}
 
 	public function add_cargobike_metaboxes($metaboxes){
+		$metadata_options = ( array ) json_decode( file_get_contents( plugin_dir_path( __DIR__ ). "vendor/wielebenwir/commons-api/velogistics-metadata.json" ) );
+		$features_options = array();
+		foreach($metadata_options["features"] as $item) {
+				$features_options[$item->id] = $item->name;
+		}
+		$item_type_options= array();
+		foreach($metadata_options["itemType"] as $item){
+			$item_type_options[$item->id] = $item->name;
+		}
 		// Start with an underscore to hide fields from custom fields list
 		$prefix = '_velogistics_';
 
@@ -191,35 +203,91 @@ public function render_text_input( $args ) {
 
 		$cmb['fields'] = array( 
 			array(
-			'name' => esc_html__( 'Suited for children transport'),
-			'id'   => $prefix . 'can_transport_children',
+				'name' => esc_html__('Item Type'),
+				'id' => $prefix. 'item_type',
+				'type' => 'select',
+				'show_option_none' => true,
+				'options' => $item_type_options
+			),
+			array(
+			'name' => esc_html__( 'Commercial offer'),
+			'id'   => $prefix . 'is_commerical',
 			'type' => 'checkbox',
 			'sanitization_cb' => array($this, 'sanitize_boolean')
-		),
-		array(
-			'name' => __( 'Maximum transport weight (kg)' ),
-			'id'   => $prefix . 'max_transport_weight',
-			'type' => 'text',
-			'attributes' => array(
-				'type' => 'number',
-				'pattern' => '\d*',
 			),
-			'sanitization_cb' => 'absint',
-				'escape_cb'       => 'absint',
-		),
-		array(
-			'name' => __( 'Number of wheels' ),
-			'id'   => $prefix . 'nr_of_wheels',
-			'type' => 'text',
-			'attributes' => array(
-				'type' => 'number',
-				'pattern' => '\d*',
+			array(
+				'name' => __( 'Load capacity (kg)' ),
+				'id'   => $prefix . 'load_capacity',
+				'type' => 'text',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*\.?\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => array($this, 'sanitize_float'),
+					'escape_cb'       => array($this, 'sanitize_float'),
 			),
-			'sanitization_cb' => 'absint',
-				'escape_cb'       => 'absint',
-		) );
+			array(
+				'name'    => 'Features',
+				'desc'    => 'features of your cargo-bike',
+				'id'   => $prefix . 'features',
+				'type'    => 'multicheck',
+				'options' => $features_options,
+			),
+			array(
+				'name' => 'Box dimensions (cm)',
+				'desc' => "Size of storage space inside the cargo bike's box",
+				'type' => 'title',
+				'id'   => $prefix.'box_dimensions_title'
+			),
+			array(
+				'name' => __( 'Length' ),
+				'id'   => $prefix . 'box_length',
+				'type' => 'text_small',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*\.?\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => array($this, 'sanitize_float'),
+					'escape_cb'       => array($this, 'sanitize_float'),
+			),
+			array(
+				'name' => __( 'Width' ),
+				'id'   => $prefix . 'box_width',
+				'type' => 'text_small',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*\.?\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => array($this, 'sanitize_float'),
+					'escape_cb'       => array($this, 'sanitize_float'),
+			),
+			array(
+				'name' => __( 'Height' ),
+				'id'   => $prefix . 'box_height',
+				'type' => 'text_small',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*\.?\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => array($this, 'sanitize_float'),
+					'escape_cb'       => array($this, 'sanitize_float'),
+			),
+		);
+
 		$metaboxes[] = $cmb;
 		return $metaboxes;
+	}
+
+	public function update_option($old_value, $new_value){
+		// notify velogistics
+		if($old_value['publish'] != $new_value['publish']){
+			$url = $new_value['notification_url'].'?url='.urlencode(get_rest_url(null, VELOGISTICS_COMMONS_API_ENDPOINT));
+			wp_remote_get($url);
+		}
 	}
 
 	/**
@@ -264,7 +332,7 @@ public function render_text_input( $args ) {
 		 * class.
 		 */
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/velogistics-admin.js', array( 'jquery' ), $this->version, false );
+		// wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/velogistics-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 
