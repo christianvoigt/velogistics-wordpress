@@ -81,7 +81,7 @@ class Velogistics_Admin {
 		add_option( 'velogistics_settings_group');
 		add_settings_section(
 			'velogistics_general_section',
-			'General Settings',
+			'',
 			array( $this, 'render_settings_section' ),
 			'velogistics_settings_group'
 		);
@@ -134,7 +134,9 @@ class Velogistics_Admin {
 		return filter_var($input,FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
 	}
 	public function render_settings_section() {
-		//echo additional content between section header and content
+		echo '<p>If you choose to publish your cargobikes, Velogistics will regularly retrieve items, locations, owners, projects and availability slots from your Wordpress installation. Only publicly accessible data of Commons Booking 2 is synchronized (through the Commons API).</p> 
+		<p>Apart from the Wordpress username and homepage url of cargobike owners, no user data is published.</p>
+		<p>By publishing your data you agree to the <a href="#">Terms of Service</a> of velogistics.net.</p>';	
 	}
 	public function render_checkbox_input( $args ) {
 		$options = get_option( 'velogistics_settings_name' );
@@ -151,7 +153,7 @@ public function render_text_input( $args ) {
 }
 	public function register_options_page(){
 		add_options_page( 
-			'Velogistics Plugin Settings', 
+			'Velogistics Settings', 
 			'Velogistics', 
 			'manage_options', 
 			'velogistics-options', 
