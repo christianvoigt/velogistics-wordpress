@@ -30,7 +30,12 @@ class Velogistics_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		// unpublish on deactivation
+		$settings = get_option( 'velogistics_settings_name' );
+		$settings["publish"] = 0;
+		update_option('velogistics_settings_name', $settings);
+		$url = $settings['notification_url'].'?url='.urlencode(get_rest_url(null, VELOGISTICS_COMMONS_API_ENDPOINT));
+		wp_remote_get($url);
 	}
 
 }
