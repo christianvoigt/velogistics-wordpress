@@ -292,6 +292,17 @@ public function render_text_input( $args ) {
 		}
 	}
 
+	public function pause_notification(){
+		$settings = get_option( 'velogistics_settings_name' );
+		$settings["pause"] = 1;
+		update_option('velogistics_settings_name', $settings);
+	}
+	public function unpause_notification(){
+		$settings = get_option( 'velogistics_settings_name' );
+		$settings["pause"] = 0;
+		update_option('velogistics_settings_name', $settings);
+	}
+
 	/**
 	 * Register the stylesheets for the admin area.
 	 *

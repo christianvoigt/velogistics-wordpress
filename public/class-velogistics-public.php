@@ -131,12 +131,14 @@ class Velogistics_Public {
 	public function add_publishOnVelogistics_flag($data){
 		$settings = get_option( 'velogistics_settings_name' );
 		$publish = isset($settings['publish']) && $settings['publish'] == '1';
-		$data['publishOnVelogistics'] = $publish;
+		$paused = isset($settings['pause']) && $settings['pause'] == '1';
+		$data['publishOnVelogistics'] = $publish && !$paused;
 		return $data;
 	}
 	public function notify_velogistics($post_id, $post){
 		$settings = get_option( 'velogistics_settings_name' );
-		if (!isset($settings['publish']) || $settings['publish'] == '0') {
+		$paused = isset($settings['pause']) && $settings['pause'] == '1';
+		if (!isset($settings['publish']) || $settings['publish'] == '0' || $paused) {
 			return;
 		}
 		// in the future we might have to check if the booking is used once (otherwise it might affect other things in the system)

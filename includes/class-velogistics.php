@@ -161,6 +161,8 @@ class Velogistics {
 		$this->loader->add_action('admin_init', $plugin_admin, 'register_settings');
 		$this->loader->add_action('admin_menu', $plugin_admin, 'register_options_page');
 		$this->loader->add_action('update_option_velogistics_settings_name', $plugin_admin, 'update_option', 10, 2);
+		$this->loader->add_action('cb2_bulk_data_create_start', $plugin_admin, 'pause_notifications', 10);
+		$this->loader->add_action('cb2_bulk_data_create_finish', $plugin_admin, 'unpause_notifications', 10);
 	}
 
 	/**
