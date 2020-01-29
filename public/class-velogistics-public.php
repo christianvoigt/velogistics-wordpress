@@ -112,6 +112,8 @@ class Velogistics_Public {
 		$id = $item->ID;
 		$itemApiData['isCommercial'] = get_post_meta( $id, $prefix.'is_commercial', true )? true:false;
 		$itemApiData['loadCapacity'] = (float)get_post_meta( $id, $prefix.'load_capacity', true );
+		$itemApiData['nrOfWheels'] = (int)get_post_meta( $id, $prefix.'nr_of_wheels', true );
+		$itemApiData['seatsForChildren'] = (int)get_post_meta( $id, $prefix.'seats_for_children', true );
 		$itemApiData['itemType'] = sanitize_text_field(get_post_meta( $id, $prefix.'item_type', true ));
 		$itemApiData['features'] = array();
 		$features = get_post_meta( $id, $prefix.'features', true );
@@ -124,6 +126,11 @@ class Velogistics_Public {
 			"width"=> (float)get_post_meta( $id, $prefix.'box_width', true ),
 			"height"=> (float)get_post_meta( $id, $prefix.'box_height', true ),
 			"length"=> (float)get_post_meta( $id, $prefix.'box_length', true ),
+		);
+		$itemApiData["bikeDimensions"] = array(
+			"width"=> (float)get_post_meta( $id, $prefix.'bike_width', true ),
+			"height"=> (float)get_post_meta( $id, $prefix.'bike_height', true ),
+			"length"=> (float)get_post_meta( $id, $prefix.'bike_length', true ),
 		);
 
 		return $itemApiData;

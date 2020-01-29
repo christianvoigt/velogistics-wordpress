@@ -230,11 +230,77 @@ public function render_text_input( $args ) {
 					'escape_cb'       => array($this, 'sanitize_float'),
 			),
 			array(
+				'name' => __( 'Number of Wheels' ),
+				'id'   => $prefix . 'nr_of_wheels',
+				'type' => 'text',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => 'absint',
+        		'escape_cb'       => 'absint',
+			),
+			array(
+				'name' => __( 'Seats for Children' ),
+				'id'   => $prefix . 'seats_for_children',
+				'type' => 'text',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => 'absint',
+        		'escape_cb'       => 'absint',
+			),
+			array(
 				'name'    => 'Features',
 				'desc'    => 'features of your cargo-bike',
 				'id'   => $prefix . 'features',
 				'type'    => 'multicheck',
 				'options' => $features_options,
+			),
+			array(
+				'name' => 'Bike dimensions (cm)',
+				'desc' => "Size of the bike",
+				'type' => 'title',
+				'id'   => $prefix.'bike_dimensions_title'
+			),
+			array(
+				'name' => __( 'Length' ),
+				'id'   => $prefix . 'bike_length',
+				'type' => 'text_small',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*\.?\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => array($this, 'sanitize_float'),
+					'escape_cb'       => array($this, 'sanitize_float'),
+			),
+			array(
+				'name' => __( 'Width' ),
+				'id'   => $prefix . 'bike_width',
+				'type' => 'text_small',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*\.?\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => array($this, 'sanitize_float'),
+					'escape_cb'       => array($this, 'sanitize_float'),
+			),
+			array(
+				'name' => __( 'Height' ),
+				'id'   => $prefix . 'bike_height',
+				'type' => 'text_small',
+				'attributes' => array(
+					'type' => 'number',
+					'pattern' => '\d*\.?\d*',
+					'step' => 0.01
+				),
+				'sanitization_cb' => array($this, 'sanitize_float'),
+					'escape_cb'       => array($this, 'sanitize_float'),
 			),
 			array(
 				'name' => 'Box dimensions (cm)',

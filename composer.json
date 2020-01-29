@@ -4,15 +4,15 @@
             "type": "package",
             "package": {
                 "name": "wielebenwir/commons-api",
-                "version": "v0.6.2-beta",
+                "version": "v0.7.3-beta",
                 "dist": {
-                    "url": "https://github.com/wielebenwir/commons-api/archive/v0.6.2-beta.zip",
+                    "url": "https://github.com/wielebenwir/commons-api/archive/v0.7.3-beta.zip",
                     "type": "zip"
                 }
             }
         }
     ],
     "require": {
-        "wielebenwir/commons-api": "v0.6.2-beta"
+        "wielebenwir/commons-api": "v0.7.3-beta"
     }
 }
